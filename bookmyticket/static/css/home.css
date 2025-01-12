@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.home-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#movie-search {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Make the banner section a horizontal scrolling container */
+.banner {
+    display: flex; /* Align images horizontally */
+    overflow: hidden; /* Hide scrollbars */
+    width: 100%; /* Ensure it takes full width */
+    height: 400px; /* Set a fixed height for the banner */
+    position: relative; /* Necessary for positioning the images inside */
+}
+
+/* Each banner item should be placed next to each other */
+.banner-item {
+    flex-shrink: 0; /* Prevent shrinking of items */
+    width: 100%; /* Set each banner image to fill the screen width */
+    height: 100%; /* Set to take full height of the container */
+}
+
+/* Style for the image inside the banner */
+.banner-image {
+    width: 100%; /* Ensure the image stretches to the full width */
+    height: 100%; /* Ensure the image takes full height */
+    object-fit: cover; /* Make sure the image covers the area without distortion */
+}
+
+/* Add touch and mouse drag capabilities to scroll */
+.banner {
+    touch-action: pan-x; /* Allow horizontal swipe on touch devices */
+    cursor: grab; /* Show grab cursor when hovering over the banner */
+}
+
+.banner:active {
+    cursor: grabbing; /* Show grabbing cursor when scrolling */
+}
+
+/* Add custom scrollbar styles to hide them */
+::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar */
+}
+
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.movie-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    margin-top: 0;
+}
+
+p {
+    font-size: 1.1em;
+    margin-bottom: 0;
+}
+.movie-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Optional: center the text and image */
+}
+
+.movie-poster {
+    width: 100%; /* Make the poster fill the width of the card */
+    height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensure the poster covers the space without distortion */
+    border-radius: 8px; /* Optional: rounded corners for the image */
+    margin-bottom: 10px; /* Add space between the poster and text */
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+

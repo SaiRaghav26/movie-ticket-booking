@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="{% static 'css/payments.css' %}">
+</head>
+<body>
+    <div class="payment-container">
+        <h1>Payment Information</h1>
+        
+        <!-- Ticket Details -->
+        <section class="ticket-details">
+            <p><strong>Movie:</strong> <span id="num-tickets">Inception 1</span></p>
+            <p><strong>Theatre:</strong> <span id="num-tickets">Theatre 4</span></p>
+            <p><strong>Time:</strong> <span id="num-tickets">9AM</span></p>
+            <p><strong>Number of Tickets:</strong> <span id="num-tickets">{{ selected_seats|length }}</span></p>
+            <p><strong>Seat Numbers:</strong> <span id="seat-numbers">{{ seat_numbers|join:", " }}</span></p>
+            <p><strong>Ticket Price (each):</strong> $<span id="ticket-price">12.50</span></p>
+            <p><strong>Taxes:</strong> $<span id="taxes">2.00</span></p>
+            <p><strong>Total Amount:</strong> $<span id="total-amount">{{ total_price }}</span></p>
+        </section>
+
+        <!-- Confirm Button -->
+        <button id="confirm-btn" onclick="confirmPayment()">Confirm Payment</button>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden">
+            <h2>Payment Successful!</h2>
+            <p>Your payment has been processed successfully. You will be redirected shortly.</p>
+        </div>
+    </div>
+
+    <script src="{% static 'js/payments.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.movie-page-container {
+    width: 70%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Date Picker */
+.date-picker {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.date-picker label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.date-picker select {
+    padding: 8px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.date-picker select:focus {
+    border-color: #f39c12;
+    outline: none;
+}
+
+#theatre-search {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.theatres-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.theatre-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    margin-top: 0;
+}
+
+.show-timings {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.show-time-btn {
+    padding: 8px 15px;
+    font-size: 1em;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.show-time-btn:hover {
+    background-color: #45a049;
+}

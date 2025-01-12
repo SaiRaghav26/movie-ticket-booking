@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Theatres</title>
+    <link rel="stylesheet" href="{% static 'css/theatres.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/" class="navbar-link">Home</a></li>
+            <li><a href="/profile" class="navbar-link">Profile</a></li>
+            <li><a href="/orders" class="navbar-link">Orders</a></li>
+            <li><a href="/login" class="navbar-link">Login</a></li>
+        </ul>
+    </nav>
+    <div class="movie-page-container">
+        <!-- Movie Title -->
+        <header>
+            <h1>Available Theatres for: {{ movie.title }}</h1>
+        </header>
+        
+        <form method="GET" action="{% url 'show_timings' %}">
+            <input type="hidden" name="movie" value="{{ movie.title }}" /> <!-- Include movie name in form -->
+            <select id="date-select" name="date">
+                {% for date in available_dates %}
+                    <option value="{{ date.date|date:'Y-m-d' }}" {% if date.date == selected_date %}selected{% endif %}>
+                        {{ date.date|date:"Y-m-d" }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Show Theatres</button>
+        </form>
+        
+
+        <section class="theatres-list">
+            {% for show in show_timings %}
+                <div class="theatre-card">
+                    <h3>{{ show.theatre.theatre_name }}</h3>
+                    <h3>{{ show.theatre.location }}</h3>
+                    <div class="show-timings">
+                        <button 
+                            class="show-time-btn" 
+                            type="button" 
+                            onclick="goToBookingPage(
+                                '{{ movie.title|escapejs }}', 
+                                '{{ show.theatre.theatre_name|escapejs }}', 
+                                '{{ show.screen.screen_number|escapejs }}', 
+                                '{{ show.show_time|escapejs }}'
+                            )">
+                            {{ show.show_time }}
+                        </button>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No theatres available for this movie.</p>
+            {% endfor %}
+        </section>
+    </div>
+
+    <script>
+        // Inline script to ensure the function is accessible
+        function goToBookingPage(movieName, theatreName, screen, showTime) {
+            const selectedDate = document.getElementById('date-select').value;  // Get the selected date from the dropdown
+            if (!selectedDate) {
+                alert('Please select a date.');
+                return;
+            }
+
+            // Construct the URL with selected date
+            const url = `/book_ticket/?movie=${movieName}&theatre=${theatreName}&screen=${screen}&time=${showTime}&date=${selectedDate}`;
+            console.log("Redirecting to: ", url);  // Check if the URL is correct
+            window.location.replace(url);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* Navbar Container */
+.navbar {
+    background-color: #333; /* Dark background color */
+    padding: 10px 20px;
+    position: sticky; /* Keeps the navbar at the top */
+    top: 0;
+    z-index: 1000; /* Ensure the navbar stays on top of other content */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a slight shadow for depth */
+}
+
+/* Navbar Links Container */
+.navbar-links {
+    list-style: none; /* Removes bullet points */
+    padding: 0;
+    margin: 0;
+    display: flex; /* Align items horizontally */
+    justify-content: flex-start; /* Align links to the left */
+}
+
+/* Individual Navbar Link */
+.navbar-link {
+    color: white; /* White text color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px 20px; /* Add space around the link */
+    margin: 0 10px; /* Add margin between links */
+    font-weight: bold; /* Bold text */
+    border-radius: 5px; /* Rounded corners for links */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Navbar Link Hover Effect */
+.navbar-link:hover {
+    background-color: #555; /* Darken background color on hover */
+    color: white; /* Ensure text stays white */
+}
+
+/* Mobile Responsiveness - Center the links */
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column; /* Stack links vertically on smaller screens */
+        align-items: center; /* Center align links */
+    }
+
+    .navbar-link {
+        padding: 15px; /* Add more padding on mobile for easier tap */
+        margin: 5px 0; /* Space out the links vertically */
+    }
+}

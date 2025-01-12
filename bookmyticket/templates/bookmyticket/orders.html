@@ -1,0 +1,29 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Page</title>
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/" class="navbar-link">Home</a></li>
+            <li><a href="/profile" class="navbar-link">Profile</a></li>
+            <li><a href="/orders" class="navbar-link">Orders</a></li>
+            <li><a href="/login" class="navbar-link">Login</a></li>
+        </ul>
+    </nav>
+    <div class="orders-container">
+        <h2>Your Orders</h2>
+        <div id="orders-list">
+            <!-- Orders will be dynamically added here -->
+        </div>
+    </div>
+    <script src="{% static 'js/orders.js' %}"></script>
+</body>
+</html>

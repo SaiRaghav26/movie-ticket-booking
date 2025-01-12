@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/" class="navbar-link">Home</a></li>
+            <li><a href="/profile" class="navbar-link">Profile</a></li>
+            <li><a href="/orders" class="navbar-link">Orders</a></li>
+            <li><a href="/login" class="navbar-link">Login</a></li>
+        </ul>
+    </nav>
+    <div class="home-container">
+        <!-- Search Bar -->
+        <header>
+            <input type="text" id="movie-search" placeholder="Search for movies..." />
+        </header>
+
+        <!-- Scrolling Banner -->
+        <section class="banner">
+            {% for movie in movies%}
+            <div class="banner-item">
+                <img src="{{movie.banner_url}}" alt="Now Showing:{{movie.title}}" class="banner-image" onclick="redirectToTheatres('{{movie.title}}')" />
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="movies-grid">
+            {% for movie in movies %}
+            <div class="movie-card" onclick="redirectToTheatres('{{movie.title}}')">
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster" class="movie-poster" />
+                <h3>{{ movie.title }}</h3>
+                <p>{{ movie.release_date}}</p>
+                <p>{{ movie.genre }}</p>
+            </div>
+            {% endfor %}
+        </section>
+        
+    </div>
+    <script src="{% static 'js/home.js' %}"></script>
+</body>
+</html>

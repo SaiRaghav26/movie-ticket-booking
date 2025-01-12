@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ show.movie.title }} - Ticket Booking</title>
+    <link rel="stylesheet" href="{% static 'css/ticket_booking.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/" class="navbar-link">Home</a></li>
+            <li><a href="/profile" class="navbar-link">Profile</a></li>
+            <li><a href="/orders" class="navbar-link">Orders</a></li>
+            <li><a href="/login" class="navbar-link">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticket-booking-container">
+        <!-- Ticket Info Section -->
+        <div id="ticket-info" class="ticket-info">
+            <p><strong>Movie:</strong> {{ show.movie.title }}</p>
+            <p><strong>Theatre:</strong> {{ show.theatre.theatre_name }}</p>
+            <p><strong>Time:</strong> {{ show.show_time }}</p>
+            <p>Tickets Selected: <span id="ticket-count">0</span></p>
+            <p>Total Price: $<span id="total-price">0.00</span></p>
+        </div>
+
+        <div class="seating-grid">
+            {% for seat in seats %}
+                <label>
+                    <input type="checkbox" class="seat" id="{{ seat.row }}{{ seat.column }}" {% if seat.is_booked %} disabled {% endif %}>
+                    <span class="seat-label {% if seat.is_booked %}booked{% endif %}">{{ seat.row }}{{ seat.column }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        
+
+            <!-- Confirm Booking Button -->
+            <button type="submit" id="confirm-booking">Confirm Booking</button>
+        </form>
+    </div>
+
+    <script src="{% static 'js/ticket_booking.js' %}"></script>
+</body>
+</html>
