@@ -36,10 +36,10 @@ h2 {
 
 .seating-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Makes grid responsive */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjusted for better responsive layout */
     gap: 15px;
     margin-top: 30px;
-    justify-items: center; /* Centers the seat labels */
+    justify-items: center; /* Keeps seat labels centered */
 }
 
 label {
@@ -64,6 +64,7 @@ input[type="checkbox"] {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer; /* Makes the seat label clickable */
 }
 
 .booked {
@@ -80,6 +81,7 @@ input[type="checkbox"]:checked + .seat-label {
 button {
     display: block;
     width: 100%;
+    max-width: 250px; /* Optional: limit max width */
     padding: 15px;
     background-color: #28a745;
     color: white;
@@ -87,7 +89,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 30px;
+    margin: 30px auto; /* Centers the button horizontally */
 }
 
 button:hover {

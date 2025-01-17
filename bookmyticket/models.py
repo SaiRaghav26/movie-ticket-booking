@@ -36,6 +36,8 @@ class ShowTimings(models.Model):
     show_time=models.TimeField()
     screen=models.ForeignKey(Screen,related_name='show_timings',on_delete=models.CASCADE)
     date=models.DateField(default=datetime.date.today)
+    rows = models.IntegerField(default=12)  # Define the number of rows for the show
+    columns = models.IntegerField(default=12)
 
     class Meta:
         constraints=[
@@ -48,15 +50,10 @@ class ShowTimings(models.Model):
 
 class Seat(models.Model):
     show = models.ForeignKey(ShowTimings, related_name='seats', on_delete=models.CASCADE)
-    row = models.CharField(max_length=2)  # A, B, C, ...
-    column = models.IntegerField()  # 1, 2, 3, ...
     is_booked = models.BooleanField(default=False)  # Whether the seat is booked or not
 
-    class Meta:
-        unique_together = ('show', 'row', 'column')
-
     def __str__(self):
-        return f'{self.row}{self.column} in {self.show.screen.screen_number} at {self.show.date}'
+        return f'created seats for  {self.show.screen.screen_number} at {self.show.date}'
     
 
 
