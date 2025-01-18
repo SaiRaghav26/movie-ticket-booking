@@ -1,11 +1,11 @@
 from django import forms
-from .models import Seat
+from .models import Seat,ShowTimings
 from .utils import SeatCreator
 
 class SeatAdminForm(forms.ModelForm):
     class Meta:
         model = Seat
-        fields = '__all__'
+        fields = []
 
     def __init__(self, *args, **kwargs):
         show = kwargs.pop('show', None)  # Extract the 'show' from kwargs

@@ -27,18 +27,19 @@
             <p><strong>Theatre:</strong> {{ show.theatre.theatre_name }}</p>
             <p><strong>Time:</strong> {{ show.show_time }}</p>
             <p>Tickets Selected: <span id="ticket-count">0</span></p>
-            <p>Total Price: $<span id="total-price">0.00</span></p>
+            <p>Total Price: ₹<span id="total-price">0.00</span></p>
         </div>
 
         <form method="POST" action="{% url 'book_ticket' %}">
             {% csrf_token %}
             <div class="seating-grid">
-                {% for seat in seats %}
+                {% for field in form %}
                     <label>
-                        <input type="checkbox" class="seat" name="seats" value="{{ seat.id }}" 
-                               {% if seat.is_booked %} disabled {% endif %}>
-                        <span class="seat-label {% if seat.is_booked %}booked{% endif %}">
-                            {{field.label}}
+                        <!-- Render seat checkbox dynamically -->
+                        <input type="checkbox" class="seat" name="{{ field.name }}" value="{{ field.value }}" 
+                               {% if field.value.is_booked %} disabled {% endif %}>
+                        <span class="seat-label {% if field.value.is_booked %}booked{% endif %}">
+                            {{ field.label }}
                         </span>
                     </label>
                 {% endfor %}

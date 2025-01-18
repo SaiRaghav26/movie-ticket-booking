@@ -102,12 +102,13 @@ class TicketBookingView(View):
 
         # Get seats for the show
         seats = Seat.objects.filter(show=show)
+        form=SeatAdminForm(show=show)
         
         #pass data to the template
         return render(request,'bookmyticket/ticket_booking.html',{
             'show':show,
             'seats':seats,
-            'form':SeatAdminForm,
+            'form':form,
 
         })
         

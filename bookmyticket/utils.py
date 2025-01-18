@@ -13,8 +13,6 @@ class SeatCreator:
                 seats.append(
                     Seat(
                         show=self.show,
-                        row=chr(64 + row),  # Set row as a letter (A, B, C, ...)
-                        column=col, 
                         is_booked=False
                     )
                     )
