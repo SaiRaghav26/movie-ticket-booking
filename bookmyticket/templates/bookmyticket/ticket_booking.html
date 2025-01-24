@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ show.movie.title }} - Ticket Booking</title>
+    <title>Ticket Booking</title>
     <link rel="stylesheet" href="{% static 'css/ticket_booking.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
@@ -23,23 +23,40 @@
     <div class="ticket-booking-container">
         <!-- Ticket Info Section -->
         <div id="ticket-info" class="ticket-info">
-            <p><strong>Movie:</strong> {{ show.movie.title }}</p>
-            <p><strong>Theatre:</strong> {{ show.theatre.theatre_name }}</p>
-            <p><strong>Time:</strong> {{ show.show_time }}</p>
+            <p><strong>Movie:</strong> {{ recliner_seats.0.show.movie.title }}</p>
+            <p><strong>Theatre:</strong> {{ recliner_seats.0.show.theatre.theatre_name }}</p>
+            <p><strong>Date:</strong> {{ recliner_seats.0.show.date }}</p>
+            <p><strong>Time:</strong> {{ recliner_seats.0.show.show_time }}</p>
             <p>Tickets Selected: <span id="ticket-count">0</span></p>
             <p>Total Price: ₹<span id="total-price">0.00</span></p>
         </div>
 
         <form method="POST" action="{% url 'book_ticket' %}">
             {% csrf_token %}
-            <div class="seating-grid">
-                {% for field in form %}
+
+            <!-- Display Recliner Seats -->
+            <h2>Recliner Seats</h2>
+            <div class="seating-grid recliner">
+                {% for seat in recliner_seats %}
                     <label>
-                        <!-- Render seat checkbox dynamically -->
-                        <input type="checkbox" class="seat" name="{{ field.name }}" value="{{ field.value }}" 
-                               {% if field.value.is_booked %} disabled {% endif %}>
-                        <span class="seat-label {% if field.value.is_booked %}booked{% endif %}">
-                            {{ field.label }}
+                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}" 
+                               {% if seat.is_booked %} disabled {% endif %}>
+                        <span class="seat-label {% if seat.is_booked %}booked{% endif %}">
+                            {{ seat.seat_number }}
+                        </span>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <!-- Display Executive Seats -->
+            <h2>Executive Seats</h2>
+            <div class="seating-grid executive">
+                {% for seat in executive_seats %}
+                    <label>
+                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}" 
+                               {% if seat.is_booked %} disabled {% endif %}>
+                        <span class="seat-label {% if seat.is_booked %}booked{% endif %}">
+                            {{ seat.seat_number }}
                         </span>
                     </label>
                 {% endfor %}

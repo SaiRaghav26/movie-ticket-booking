@@ -1,12 +1,11 @@
 from django.http import Http404,JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.views.generic import TemplateView,View,DetailView
-from .models import Movie,ShowTimings,Seat
-from .serializer import MovieSerializer,ShowTimingsSerializer,SeatSerializer
+from django.views.generic import TemplateView
+from .models import Movie,ShowTimings,Seat,Screen,SeatCategory
+from .serializer import MovieSerializer,ShowTimingsSerializer
 from datetime import datetime
 from .forms import SeatAdminForm
-from .utils import SeatCreator
 
 class HomePageView(TemplateView):
     template_name='bookmyticket/home.html'
@@ -74,44 +73,54 @@ class ShowTimingPageView(TemplateView):
         return context
 
     
-class TicketBookingView(View):
+class TicketBookingView(TemplateView):
+    template_name = 'bookmyticket/ticket_booking.html'
 
-    def get(self, request, *args, **kwargs):
-        # Get query parameters
-        movie = request.GET.get('movie')
-        theatre = request.GET.get('theatre')
-        screen = request.GET.get('screen')
-        time = request.GET.get('time')
-        date = request.GET.get('date')
+    def get_context_data(self, **kwargs):
+        movie_name = self.request.GET.get('movie', '').strip()
+        theatre_name = self.request.GET.get('theatre', '').strip()
+        screen = self.request.GET.get('screen', '').strip()
+        time = self.request.GET.get('time', '').strip()
+        date = self.request.GET.get('date', '').strip()
 
-        # Validate required parameters
-        if not all([movie, theatre, screen, time, date]):
-            return JsonResponse({'error': 'Missing required parameters'}, status=400)
-
-        # Find the show using the parameters
-        try:
-            show = ShowTimings.objects.get(
-                movie__title=movie,
-                screen__theatre__theatre_name=theatre,
-                screen__screen_number=screen,
-                show_time=time,
-                date=date,
-            )
-        except ShowTimings.DoesNotExist:
-            return JsonResponse({'error': 'Show not found'}, status=404)
-
-        # Get seats for the show
-        seats = Seat.objects.filter(show=show)
-        form=SeatAdminForm(show=show)
+        context = super().get_context_data(**kwargs)
         
-        #pass data to the template
-        return render(request,'bookmyticket/ticket_booking.html',{
-            'show':show,
-            'seats':seats,
-            'form':form,
+        seat_query_set = Seat.objects.all()
 
-        })
+        if movie_name:
+            show_timings = ShowTimings.objects.filter(movie__title__icontains=movie_name)
+            seat_query_set = seat_query_set.filter(show__in=show_timings)
+
+        if theatre_name or screen:
+            screens = Screen.objects.all()
+            if theatre_name:
+                screens = screens.filter(theatre__theatre_name__icontains=theatre_name)
+
+            if screen:
+                screens = screens.filter(screen_number__icontains=screen)
+
+            seat_query_set = seat_query_set.filter(show__screen__in=screens)
+
+        if time:
+            seat_query_set = seat_query_set.filter(show__show_time__icontains=time)
+
+        if date:
+            seat_query_set = seat_query_set.filter(show__date=date)
+
+        # Categorize seats
+        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliners')  # Rows A and B
+        executive_seats = seat_query_set.exclude(seat_category__category_name='Executive')  # All other rows
+
+        # Pass categorized seats to the context
+        context['recliner_seats'] = recliner_seats
+        context['executive_seats'] = executive_seats
+        return context
+
+
         
+
+
+    
 
 
     

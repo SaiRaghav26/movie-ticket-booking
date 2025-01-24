@@ -1,3 +1,4 @@
+/* General Body Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -5,6 +6,7 @@ body {
     padding: 0;
 }
 
+/* Ticket Booking Container */
 .ticket-booking-container {
     width: 80%;
     margin: 20px auto;
@@ -16,6 +18,7 @@ body {
     box-sizing: border-box;
 }
 
+/* Ticket Info Section */
 .ticket-info {
     font-size: 1.2em;
     background-color: #fff;
@@ -28,14 +31,14 @@ body {
     flex-direction: column;
 }
 
+/* Heading for Categories */
 h2 {
     text-align: center;
     margin-top: 30px;
     font-size: 1.8em;
 }
 
-
-
+/* Label Styling */
 label {
     display: flex;
     align-items: center;
@@ -46,6 +49,7 @@ input[type="checkbox"] {
     margin-right: 10px;
 }
 
+/* Seating Grid */
 .seating-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr); /* Ensure 12 columns per row */
@@ -53,8 +57,10 @@ input[type="checkbox"] {
     margin-top: 30px;
     justify-items: center;
     overflow-x: auto; /* Allow scrolling horizontally if needed */
+    white-space: nowrap; /* Keeps seats on a single line */
 }
 
+/* Seat Label Styling */
 .seat-label {
     font-size: 1em; /* Reduce the font size */
     padding: 8px;
@@ -70,18 +76,20 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-
+/* Booked Seat Styling */
 .booked {
     background-color: #e0e0e0;
     color: #b0b0b0;
     cursor: not-allowed;
 }
 
+/* Checked Seat Styling */
 input[type="checkbox"]:checked + .seat-label {
     background-color: #4CAF50;
     color: white;
 }
 
+/* Button Styling */
 button {
     display: block;
     width: 100%;
@@ -98,4 +106,17 @@ button {
 
 button:hover {
     background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .seating-grid {
+        grid-template-columns: repeat(6, 1fr); /* 6 columns on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .seating-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on very small screens */
+    }
 }
