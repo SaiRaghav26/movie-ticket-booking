@@ -9,15 +9,21 @@
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
 <body>
-    <!-- Navigation Menu -->
     <nav class="navbar">
         <ul class="navbar-links">
             <li><a href="/" class="navbar-link">Home</a></li>
             <li><a href="/profile" class="navbar-link">Profile</a></li>
             <li><a href="/orders" class="navbar-link">Orders</a></li>
-            <li><a href="/login" class="navbar-link">Login</a></li>
+            
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}" class="navbar-link">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}?next={{ request.path }}" class="navbar-link">Login</a></li>
+            {% endif %}
+
         </ul>
     </nav>
+    
     <div class="container">
         <h1>User Profile</h1>
         <form id="profile-form">

@@ -2,6 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login-form");
     const forgotPasswordLink = document.getElementById("forgot-password-link");
+    const signupLink = document.getElementById("signup-link");
 
     // Handle Login Form Submission
     loginForm.addEventListener("submit", (event) => {
@@ -29,6 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
      signupLink.addEventListener("click", (event) => {
         event.preventDefault();
         alert("Redirecting to Signup Page...");
-        window.location.href = "/signup"; // Update with the actual signup URL
+        window.location.href = "/signup/"; // Update with the actual signup URL
     });
 });

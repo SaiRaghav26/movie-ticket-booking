@@ -16,9 +16,16 @@
             <li><a href="/" class="navbar-link">Home</a></li>
             <li><a href="/profile" class="navbar-link">Profile</a></li>
             <li><a href="/orders" class="navbar-link">Orders</a></li>
-            <li><a href="/login" class="navbar-link">Login</a></li>
+            
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}" class="navbar-link">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}?next={{ request.get_full_path }}" class="navbar-link">Login</a></li>
+            {% endif %}
+
         </ul>
     </nav>
+    
 
     <div class="ticket-booking-container">
         <!-- Ticket Info Section -->
@@ -26,7 +33,7 @@
             <p><strong>Movie:</strong> {{ recliner_seats.0.show.movie.title }}</p>
             <p><strong>Theatre:</strong> {{ recliner_seats.0.show.theatre.theatre_name }}</p>
             <p><strong>Date:</strong> {{ recliner_seats.0.show.date }}</p>
-            <p><strong>Time:</strong> {{ recliner_seats.0.show.show_time }}</p>
+            <p><strong>Time:</strong> {{ recliner_seats.0.show.show_time|time:"h:i A" }}</p>
             <p>Tickets Selected: <span id="ticket-count">0</span></p>
             <p>Total Price: ₹<span id="total-price">0.00</span></p>
         </div>
@@ -39,7 +46,7 @@
             <div class="seating-grid recliner">
                 {% for seat in recliner_seats %}
                     <label>
-                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}" 
+                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}"  data-price="{{ seat.price }}"
                                {% if seat.is_booked %} disabled {% endif %}>
                         <span class="seat-label {% if seat.is_booked %}booked{% endif %}">
                             {{ seat.seat_number }}
@@ -53,7 +60,7 @@
             <div class="seating-grid executive">
                 {% for seat in executive_seats %}
                     <label>
-                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}" 
+                        <input type="checkbox" class="seat" name="seats" value="{{ seat.seat_number }}"  data-price="{{ seat.price }}"
                                {% if seat.is_booked %} disabled {% endif %}>
                         <span class="seat-label {% if seat.is_booked %}booked{% endif %}">
                             {{ seat.seat_number }}

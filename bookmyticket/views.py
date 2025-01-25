@@ -1,11 +1,15 @@
 from django.http import Http404,JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from .forms import SignupForm
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.views.generic import TemplateView,CreateView,FormView
+from django.contrib.auth.views import LoginView,PasswordResetView
 from .models import Movie,ShowTimings,Seat,Screen,SeatCategory
 from .serializer import MovieSerializer,ShowTimingsSerializer
 from datetime import datetime
-from .forms import SeatAdminForm
 
 class HomePageView(TemplateView):
     template_name='bookmyticket/home.html'
@@ -73,7 +77,7 @@ class ShowTimingPageView(TemplateView):
         return context
 
     
-class TicketBookingView(TemplateView):
+class TicketBookingPageView(TemplateView):
     template_name = 'bookmyticket/ticket_booking.html'
 
     def get_context_data(self, **kwargs):
@@ -109,12 +113,50 @@ class TicketBookingView(TemplateView):
 
         # Categorize seats
         recliner_seats = seat_query_set.filter(seat_category__category_name='Recliners')  # Rows A and B
-        executive_seats = seat_query_set.exclude(seat_category__category_name='Executive')  # All other rows
+        executive_seats = seat_query_set.filter(seat_category__category_name='Executive')  # All other rows
 
         # Pass categorized seats to the context
         context['recliner_seats'] = recliner_seats
         context['executive_seats'] = executive_seats
         return context
+
+class LoginPageView(LoginView):
+    template_name='bookmyticket/login.html'
+
+    def form_valid(self,form):
+        next_url = self.request.POST.get('next', self.get_success_url())
+        messages.success(self.request, 'Login successful')
+        return redirect(next_url)
+    
+    def form_invalid(self,form):
+        messages.error(self.request,'Invalid username or password')
+        super().form_invalid(form)
+
+class SignupPageView(FormView):
+    form_class = SignupForm
+    template_name='signup.html'
+    success_url = reverse_lazy('login')
+
+    def form_valid(self,form):
+        user=form.save(commit=False)
+        user.set_password(form.cleaned_data['password'])
+        user.save()
+        messages.success(self.request, "Signup successful! Please log in.")
+        return super().form_valid(form)
+    
+    def form_invalid(self,form):
+        messages.error(self.request, "Please correct the errors below.")
+        return super().form_invalid(form)
+
+
+
+
+class ForgotPasswordPageView(PasswordResetView):
+    template_name = 'bookmyticket/forgot_password.html'  # Custom template for the form
+    email_template_name = 'bookmyticket/password_reset_email.html'  # Email template
+    subject_template_name = 'bookmyticket/password_reset_subject.txt'  # Subject line template
+    success_url = reverse_lazy('login')
+    
 
 
         

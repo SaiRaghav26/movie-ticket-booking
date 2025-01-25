@@ -1,27 +1,28 @@
 from django import forms
-from .models import Seat, ShowTimings
-from .utils import SeatCreator
+from django.contrib.auth.models import User
 
-class SeatAdminForm(forms.ModelForm):
+class SignupForm(forms.ModelForm):
+    age=forms.IntegerField()
+    gender_choices = [('male', 'Male'), ('female', 'Female'), ('other', 'Other')]
+    gender = forms.ChoiceField(choices=gender_choices, required=True)
+    password=forms.CharField(widget=forms.PasswordInput,required=True)
+    confirm_password=forms.CharField(widget=forms.PasswordInput,required=True)
+
     class Meta:
-        model = Seat
-        fields = ['seat_category']
+        model=User
+        fields=['username','email','first_name']
 
-    def __init__(self, *args, **kwargs):
-        show = kwargs.pop('show', None)  # Extract the 'show' from kwargs
-        
-        super().__init__(*args, **kwargs)
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already taken. Please choose a different username.")
+        return username
 
-        if show:
-            seat_creator = SeatCreator(show)
-            seat_creator.run()  # Creates seats dynamically if not already created
+    def clean(self):
+        cleaned_data=super().clean()
+        password=cleaned_data.get('password')
+        confirm_password=cleaned_data.get('confirm_password')
 
-            # Dynamically generate form fields for seats
-            screen = show.screen
-            rows = screen.rows  # Fetch rows from ShowTimings
-            cols = screen.columns  # Fetch columns from ShowTimings
-
-            for row in range(1, rows + 1):
-                for col in range(1, cols + 1):
-                    field_name = f'seat_{chr(64 + row)}{col}'
-                    self.fields[field_name] = forms.BooleanField(required=False, label=f'{chr(64 + row)}{col}')
+        if password!=confirm_password:
+            raise forms.ValidationError('passwords does not match')
+        return cleaned_data

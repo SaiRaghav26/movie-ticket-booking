@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,28 +8,35 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
+    
     <div class="login-container">
         <h2>Login</h2>
-        <form id="login-form">
+
+        <!-- Display Messages -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+            {{ form.as_p }}
             <div class="form-group">
-                <label for="email">Email ID:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" id="login-button">Login</button>
-            </div>
-            <div class="forgot-password">
-                <a href="{% url 'forgot_password' %}" id="forgot-password-link">Forgot Password?</a>
-            </div>
-            <div class="signup-link">
-                <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+                <button type="submit">Login</button>
             </div>
         </form>
+        
+
+        <!-- Optional Links -->
+        <div class="links">
+            <a href="{% url 'forgot-password' %}">Forgot Password?</a><br>
+            <a href="{% url 'signup' %}">Don't have an account? Sign up</a>
+        </div>
     </div>
-    <script src="{% static 'js/login.js' %}"></script>
 </body>
 </html>

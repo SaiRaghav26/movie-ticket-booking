@@ -65,7 +65,10 @@ class ShowTimings(models.Model):
             name='unique_show_time_per_screen'
             )
         ]
-
+    
+    def formatted_time(self):
+        return self.show_time.strftime("%I:%M %p")
+    
     def __str__(self):
         return f'{self.movie.title} at {self.show_time} in screen:{self.screen.screen_number} on {self.date} in {self.theatre.theatre_name},{self.theatre.location}'
     
@@ -76,6 +79,7 @@ class Seat(models.Model):
     seat_category = models.ForeignKey(SeatCategory, related_name="seats", on_delete=models.CASCADE)
     price=models.DecimalField(max_digits=6,decimal_places=2,default=None)
     is_booked = models.BooleanField(default=False)  # Whether the seat is booked or not
+    
 
     def __str__(self):
         return f'created {self.seat_number} -{self.seat_category.category_name} for  {self.show.screen.screen_number} at {self.show.date}'

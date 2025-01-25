@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
 from .models import Movie,Theatre,Screen,ShowTimings,SeatCategory,Seat
-from .forms import SeatAdminForm
 
 # Register your models here.
 admin.site.register(Movie)
