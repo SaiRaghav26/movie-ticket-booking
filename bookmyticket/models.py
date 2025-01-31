@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 # Create your models here.
@@ -74,7 +75,7 @@ class ShowTimings(models.Model):
     
 
 class Seat(models.Model):
-    show = models.ForeignKey(ShowTimings, related_name='seats', on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen, related_name='seats', on_delete=models.CASCADE)
     seat_number=models.CharField(max_length=10)
     seat_category = models.ForeignKey(SeatCategory, related_name="seats", on_delete=models.CASCADE)
     price=models.DecimalField(max_digits=6,decimal_places=2,default=None)
@@ -82,7 +83,12 @@ class Seat(models.Model):
     
 
     def __str__(self):
-        return f'created {self.seat_number} -{self.seat_category.category_name} for  {self.show.screen.screen_number} at {self.show.date}'
+        return f'created {self.seat_number} -{self.seat_category.category_name} for  {self.screen.screen_number} at {self.screen.theatre.theatre_name}'
+    
+
+class ConfirmBooking(models.Model):
+    user=models.ForeignKey(User,related_name='confirm_booking',on_delete=models.CASCADE)
+
     
 
 

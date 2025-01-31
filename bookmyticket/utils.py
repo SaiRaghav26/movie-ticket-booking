@@ -1,18 +1,18 @@
 from .models import Seat,SeatCategory
 
 class SeatCreator:
-    def __init__(self,show):
-        self.show=show
-        self.rows=show.screen.rows
-        self.columns=show.screen.columns
+    def __init__(self,screen):
+        self.screen=screen
+        self.rows=screen.rows
+        self.columns=screen.columns
 
     def get_seat_category(self,row):
         categories=SeatCategory.objects.filter(
             row_start__lte=row,
             row_end__gte=row
         ).filter(
-            screen__screen_number=self.show.screen.screen_number,
-            screen__theatre__theatre_name=self.show.screen.theatre.theatre_name
+            screen__screen_number=self.screen.screen_number,
+            screen__theatre__theatre_name=self.screen.theatre.theatre_name
         )
         if categories.exists():
             category=categories.first()
@@ -28,7 +28,7 @@ class SeatCreator:
                 seat_category,price=self.get_seat_category(row)
                 seats.append(
                     Seat(
-                        show=self.show,
+                        screen=self.screen,
                         seat_number=seat_number,
                         seat_category=seat_category,
                         price=price,

@@ -170,3 +170,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_NAME = 'sessionid'  # Default session cookie name
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Sessions persist after closing browser
+SESSION_COOKIE_AGE = 1209600  # (2 weeks) Adjust if necessary
+SESSION_SAVE_EVERY_REQUEST = True  # Forces session to be saved with each request

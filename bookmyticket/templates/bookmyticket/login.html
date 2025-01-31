@@ -12,15 +12,6 @@
     <div class="login-container">
         <h2>Login</h2>
 
-        <!-- Display Messages -->
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
         <!-- Login Form -->
         <form method="post">
             {% csrf_token %}

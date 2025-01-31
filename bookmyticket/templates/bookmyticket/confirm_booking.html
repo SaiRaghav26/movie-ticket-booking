@@ -14,22 +14,22 @@
             <li><a href="/" class="navbar-link">Home</a></li>
             <li><a href="/profile" class="navbar-link">Profile</a></li>
             <li><a href="/orders" class="navbar-link">Orders</a></li>
-            
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}" class="navbar-link">Logout</a></li>
+            {% if request.user.is_authenticated %}
+               <li><a href="{% url 'logout' %}" class="navbar-link">Logout</a></li>
             {% else %}
-            <li><a href="{% url 'login' %}?next={{ request.get_full_path }}" class="navbar-link">Login</a></li>
+               <li><a href="{% url 'login' %}?next={{ request.get_full_path }}" class="navbar-link">Login</a></li>
             {% endif %}
 
         </ul>
     </nav>
     <div class="payment-container">
-        <h1>Payment Information</h1>
+        <h1>Confirm Booking</h1>
         
         <!-- Ticket Details -->
         <section class="ticket-details">
             <p><strong>Movie:</strong> <span id="num-tickets">Inception 1</span></p>
             <p><strong>Theatre:</strong> <span id="num-tickets">Theatre 4</span></p>
+            <p><strong>Date:</strong> <span id="num-tickets">Theatre 4</span></p>
             <p><strong>Time:</strong> <span id="num-tickets">9AM</span></p>
             <p><strong>Number of Tickets:</strong> <span id="num-tickets">{{ selected_seats|length }}</span></p>
             <p><strong>Seat Numbers:</strong> <span id="seat-numbers">{{ seat_numbers|join:", " }}</span></p>

@@ -11,13 +11,13 @@ admin.site.register(ShowTimings)
 
 class SeatAdmin(admin.ModelAdmin):
     # Display the seat_number, show, seat_category, and is_booked
-    list_display = ('seat_number', 'show', 'seat_category', 'is_booked')  
+    list_display = ('seat_number', 'screen', 'seat_category', 'is_booked')  
 
     # Add filters for easier searching
-    list_filter = ('show', 'seat_category', 'is_booked')  
+    list_filter = ('screen', 'seat_category', 'is_booked')  
 
     # Enable search on seat_number and the associated movie title
-    search_fields = ('seat_number', 'show__movie__title')
+    search_fields = ('seat_number', 'screen__theatre__movie__title')
 
 admin.site.register(Seat, SeatAdmin)
 

@@ -10,6 +10,14 @@ from django.contrib.auth.views import LoginView,PasswordResetView
 from .models import Movie,ShowTimings,Seat,Screen,SeatCategory
 from .serializer import MovieSerializer,ShowTimingsSerializer
 from datetime import datetime
+from django.http import JsonResponse,HttpResponse
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
+from django.views.generic.edit import FormView
 
 class HomePageView(TemplateView):
     template_name='bookmyticket/home.html'
@@ -88,13 +96,17 @@ class TicketBookingPageView(TemplateView):
         date = self.request.GET.get('date', '').strip()
 
         context = super().get_context_data(**kwargs)
-        
+
+        # Start with all seats
         seat_query_set = Seat.objects.all()
 
+        # Filter by movie title if provided
         if movie_name:
-            show_timings = ShowTimings.objects.filter(movie__title__icontains=movie_name)
-            seat_query_set = seat_query_set.filter(show__in=show_timings)
+            # Get screens related to the movie
+            screens = Screen.objects.filter(theatre__movies__title__icontains=movie_name)
+            seat_query_set = seat_query_set.filter(screen__in=screens)
 
+        # Filter by theatre and screen if provided
         if theatre_name or screen:
             screens = Screen.objects.all()
             if theatre_name:
@@ -103,30 +115,42 @@ class TicketBookingPageView(TemplateView):
             if screen:
                 screens = screens.filter(screen_number__icontains=screen)
 
-            seat_query_set = seat_query_set.filter(show__screen__in=screens)
+            seat_query_set = seat_query_set.filter(screen__in=screens)
 
-        if time:
-            seat_query_set = seat_query_set.filter(show__show_time__icontains=time)
+        # If time and date are provided, you need to get ShowTimings related to the screen first
+        if time or date:
+            # Get ShowTimings based on time and date filters
+            show_timings = ShowTimings.objects.all()
 
-        if date:
-            seat_query_set = seat_query_set.filter(show__date=date)
+            if time:
+                show_timings = show_timings.filter(show_time__icontains=time)
+
+            if date:
+                show_timings = show_timings.filter(date=date)
+
+            # Now filter screens that are related to the selected show timings
+            screens = Screen.objects.filter(show_timings__in=show_timings)
+            seat_query_set = seat_query_set.filter(screen__in=screens)
 
         # Categorize seats
-        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliners')  # Rows A and B
-        executive_seats = seat_query_set.filter(seat_category__category_name='Executive')  # All other rows
+        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliners')  # Example category
+        executive_seats = seat_query_set.filter(seat_category__category_name='Executive')  # Example category
 
         # Pass categorized seats to the context
         context['recliner_seats'] = recliner_seats
         context['executive_seats'] = executive_seats
+        
         return context
+
 
 class LoginPageView(LoginView):
     template_name='bookmyticket/login.html'
 
     def form_valid(self,form):
-        next_url = self.request.POST.get('next', self.get_success_url())
+        user = form.get_user()
         messages.success(self.request, 'Login successful')
-        return redirect(next_url)
+        # self.request.session.save()  #  Force session to be saved
+        return super().form_valid(form)
     
     def form_invalid(self,form):
         messages.error(self.request,'Invalid username or password')
@@ -156,6 +180,7 @@ class ForgotPasswordPageView(PasswordResetView):
     email_template_name = 'bookmyticket/password_reset_email.html'  # Email template
     subject_template_name = 'bookmyticket/password_reset_subject.txt'  # Subject line template
     success_url = reverse_lazy('login')
+
     
 
 
