@@ -95,6 +95,8 @@ class TicketBookingPageView(TemplateView):
         time = self.request.GET.get('time', '').strip()
         date = self.request.GET.get('date', '').strip()
 
+         
+
         context = super().get_context_data(**kwargs)
 
         # Start with all seats
@@ -133,12 +135,23 @@ class TicketBookingPageView(TemplateView):
             seat_query_set = seat_query_set.filter(screen__in=screens)
 
         # Categorize seats
-        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliners')  # Example category
+        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliner')  # Example category
         executive_seats = seat_query_set.filter(seat_category__category_name='Executive')  # Example category
 
+        if time:
+            try:
+                formatted_time = datetime.strptime(time, "%H:%M").strftime("%I:%M %p")  # Convert 24-hour format to 12-hour
+            except ValueError:
+                formatted_time = time  # If parsing fails, keep the original string
+
+        # Pass formatted time to context
+        context['formatted_time'] = formatted_time
         # Pass categorized seats to the context
+        context['movie_name']=movie_name
         context['recliner_seats'] = recliner_seats
         context['executive_seats'] = executive_seats
+        context['formatted_time'] = formatted_time
+        context['date'] = date
         
         return context
 

@@ -29,10 +29,11 @@
     <div class="ticket-booking-container">
         <!-- Ticket Info Section -->
         <div id="ticket-info" class="ticket-info">
-            <p><strong>Movie:</strong> {{ recliner_seats.0.show.movie.title }}</p>
-            <p><strong>Theatre:</strong> {{ recliner_seats.0.show.theatre.theatre_name }}</p>
-            <p><strong>Date:</strong> {{ recliner_seats.0.show.date }}</p>
-            <p><strong>Time:</strong> {{ recliner_seats.0.show.show_time|time:"h:i A" }}</p>
+            <p><strong>Movie:</strong> {{ movie_name }}</p>
+            <p><strong>Theatre:</strong> {{ recliner_seats.0.screen.theatre.theatre_name }}</p>
+            <p><strong>Screen:</strong> {{ recliner_seats.0.screen.screen_number}}</p>
+            <p><strong>Date:</strong> {{ date }}</p>
+            <p><strong>Time:</strong> {{ formatted_time }}</p>
             <p>Tickets Selected: <span id="ticket-count">0</span></p>
             <p>Total Price: ₹<span id="total-price">0.00</span></p>
         </div>
