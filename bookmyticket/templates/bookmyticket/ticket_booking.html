@@ -38,7 +38,7 @@
             <p>Total Price: ₹<span id="total-price">0.00</span></p>
         </div>
 
-        <form method="POST" action="{% url 'book_ticket' %}">
+        <form method="POST" action="{% url 'confirm-booking' %}">
             {% csrf_token %}
 
             <!-- Display Recliner Seats -->

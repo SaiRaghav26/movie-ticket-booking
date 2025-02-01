@@ -95,65 +95,80 @@ class TicketBookingPageView(TemplateView):
         time = self.request.GET.get('time', '').strip()
         date = self.request.GET.get('date', '').strip()
 
-         
-
         context = super().get_context_data(**kwargs)
 
         # Start with all seats
         seat_query_set = Seat.objects.all()
 
-        # Filter by movie title if provided
+        # Filter seats based on provided parameters
         if movie_name:
-            # Get screens related to the movie
             screens = Screen.objects.filter(theatre__movies__title__icontains=movie_name)
             seat_query_set = seat_query_set.filter(screen__in=screens)
 
-        # Filter by theatre and screen if provided
         if theatre_name or screen:
             screens = Screen.objects.all()
             if theatre_name:
                 screens = screens.filter(theatre__theatre_name__icontains=theatre_name)
-
             if screen:
                 screens = screens.filter(screen_number__icontains=screen)
-
             seat_query_set = seat_query_set.filter(screen__in=screens)
 
-        # If time and date are provided, you need to get ShowTimings related to the screen first
         if time or date:
-            # Get ShowTimings based on time and date filters
             show_timings = ShowTimings.objects.all()
-
             if time:
                 show_timings = show_timings.filter(show_time__icontains=time)
-
             if date:
                 show_timings = show_timings.filter(date=date)
-
-            # Now filter screens that are related to the selected show timings
             screens = Screen.objects.filter(show_timings__in=show_timings)
             seat_query_set = seat_query_set.filter(screen__in=screens)
 
         # Categorize seats
-        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliner')  # Example category
-        executive_seats = seat_query_set.filter(seat_category__category_name='Executive')  # Example category
+        recliner_seats = seat_query_set.filter(seat_category__category_name='Recliner')
+        executive_seats = seat_query_set.filter(seat_category__category_name='Executive')
 
+        # Format time
+        formatted_time = time
         if time:
             try:
-                formatted_time = datetime.strptime(time, "%H:%M").strftime("%I:%M %p")  # Convert 24-hour format to 12-hour
+                formatted_time = datetime.strptime(time, "%H:%M").strftime("%I:%M %p")
             except ValueError:
-                formatted_time = time  # If parsing fails, keep the original string
+                formatted_time = time
 
-        # Pass formatted time to context
-        context['formatted_time'] = formatted_time
-        # Pass categorized seats to the context
-        context['movie_name']=movie_name
-        context['recliner_seats'] = recliner_seats
-        context['executive_seats'] = executive_seats
-        context['formatted_time'] = formatted_time
-        context['date'] = date
-        
+        # Add required context
+        context.update({
+            'formatted_time': formatted_time,
+            'movie_name': movie_name,
+            'recliner_seats': recliner_seats,
+            'executive_seats': executive_seats,
+            'date': date,
+            'theatre_name': theatre_name,
+            'screen': screen
+        })
+
+        # Store selected seat details in session if POST request
+        if self.request.method == 'POST':
+            selected_seats = self.request.POST.get('selected_seats')
+            total_price = self.request.POST.get('total_price')
+
+            # Save session data: Only essential data
+            self.request.session['selected_seats'] = selected_seats
+            self.request.session['total_price'] = total_price
+
+            # Optionally, store additional data like movie name, theatre, date, etc.
+            self.request.session['movie_name'] = movie_name
+            self.request.session['theatre_name'] = theatre_name
+            self.request.session['screen'] = screen
+            self.request.session['time'] = time
+            self.request.session['date'] = date
+
+            if self.request.user.is_authenticated:
+                self.request.session['username'] = self.request.user.username
+
+            # Redirect to confirm booking page
+            return redirect('confirm-booking')
+
         return context
+
 
 
 class LoginPageView(LoginView):
@@ -193,6 +208,55 @@ class ForgotPasswordPageView(PasswordResetView):
     email_template_name = 'bookmyticket/password_reset_email.html'  # Email template
     subject_template_name = 'bookmyticket/password_reset_subject.txt'  # Subject line template
     success_url = reverse_lazy('login')
+
+
+class ConfirmBookingPageView(TemplateView):
+    template_name = 'bookmyticket/confirm_booking.html'
+
+    def get(self, request, *args, **kwargs):
+        # Fetch data from session
+        selected_seats = request.session.get('selected_seats', [])
+        total_price = request.session.get('total_price', 0)
+        movie_name = request.session.get('movie_name', '')
+        theatre_name = request.session.get('theatre_name', '')
+        screen = request.session.get('screen', '')
+        time = request.session.get('time', '')
+        date = request.session.get('date', '')
+
+        context = {
+            'selected_seats': selected_seats,
+            'total_price': total_price,
+            'movie_name': movie_name,
+            'theatre_name': theatre_name,
+            'screen': screen,
+            'time': time,
+            'date': date,
+        }
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        # Handle the confirmation logic here, such as booking the seats
+        # You can save the booking to the database and then redirect or display a success message
+        # For example, save the booking to the database:
+        
+        # Assuming you have a Booking model
+        # booking = Booking.objects.create(
+        #     user=request.user,
+        #     selected_seats=selected_seats,  # Make sure to parse and store selected seats correctly
+        #     total_price=total_price,
+        #     movie_name=movie_name,
+        #     theatre_name=theatre_name,
+        #     screen=screen,
+        #     time=time,
+        #     date=date,
+        # )
+
+        # Redirect to a confirmation or success page
+        return redirect('confirm-booking')
+
+
+    
 
     
 

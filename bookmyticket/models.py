@@ -88,6 +88,18 @@ class Seat(models.Model):
 
 class ConfirmBooking(models.Model):
     user=models.ForeignKey(User,related_name='confirm_booking',on_delete=models.CASCADE)
+    show=models.ForeignKey(ShowTimings,related_name='confirm_booking',on_delete=models.CASCADE,default=None)
+    number_of_tickets=models.IntegerField(default=0)
+    seat_numbers=models.CharField(max_length=500,null=True)
+    price=models.DecimalField(max_digits=6,decimal_places=2,default=None)
+    booking_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} has booking to confirm for {self.show.movie.title} on {self.show.date}||{self.show.show_time} at {self.show.theatre.theatre_name} ,{self.show.theatre.location}'
+    
+
+
+
 
     
 
